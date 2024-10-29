@@ -1,4 +1,4 @@
-### Important
+# Important
 Make sure you're compiling with C++20 or above.
 Example args in default tasks.json:
 

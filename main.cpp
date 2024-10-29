@@ -1,4 +1,3 @@
-#include <iostream>
 #include "SudokuLauncher.hpp"
 using namespace std;
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
-
+#include <format>
+#include <iostream>
 #include "Sudoku.hpp"
 
 Sudoku::Sudoku(const size_t n, const std::vector<int> &Board) {
@@ -21,18 +22,16 @@ void Sudoku::set(int row, int col, int val) {
 
 void Sudoku::printBoard() {
     size_t gridSize = sqrt(this->n);
-    for(int row = 0; row < this->n; row++) {
-        for(int col = 0; col < this->n; col++) {
-            std::cout << std::format("{}\t", this->at(row, col));
-            if((col + 1) % gridSize == 0) {
-                std::cout << "|\t";
-            }
-        }
-        std::cout << std::endl;
 
-        if((row + 1) % gridSize == 0) {
-            std::cout << std::endl;
+    for(int row = 0; row < this->n; row++) {
+        if(row % gridSize == 0) std::cout << std::endl;
+
+        for(int col = 0; col < this->n; col++) {
+            if(col % gridSize == 0) std::cout << "|\t";
+            std::cout << std::format("{}\t", this->at(row, col));
         }
+
+        std::cout << std::endl;
     }
 }
 
