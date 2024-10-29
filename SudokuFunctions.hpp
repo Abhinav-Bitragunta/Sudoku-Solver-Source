@@ -1,5 +1,5 @@
 #pragma once
-#include <cmath>
+#include <math.h>
 #include <format>
 #include <iostream>
 #include "Sudoku.hpp"
@@ -21,7 +21,7 @@ void Sudoku::set(int row, int col, int val) {
 }
 
 void Sudoku::printBoard() {
-    size_t gridSize = sqrt(this->n);
+    size_t gridSize = std::sqrt(this->n);
 
     for(int row = 0; row < this->n; row++) {
         if(row % gridSize == 0) std::cout << std::endl;
@@ -50,7 +50,7 @@ bool Sudoku::columnSafe(int row, int col, int val) {
 }
 
 bool Sudoku::gridSafe(int row, int col, int val) {
-    size_t gridSize = sqrt(this->n);
+    size_t gridSize = std::sqrt(this->n);
     int startRow = row - (row % gridSize);
     int startCol = col - (col % gridSize);
 

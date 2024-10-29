@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <math.h>
 #include "Sudoku.hpp"
 #include "SudokuFunctions.hpp"
-
 
 class SudokuLauncher {
    private:
@@ -15,8 +15,8 @@ class SudokuLauncher {
     void launch();
 };
 
-void SudokuLauncher::launch(){
-    while(!this->userInput()){
+void SudokuLauncher::launch() {
+    while(!this->userInput()) {
         std::cout << "Sudoku length/breadth must be a perfect square\n";
     }
     Sudoku s(this->n, this->nums);
@@ -30,10 +30,10 @@ void SudokuLauncher::launch(){
     }
 }
 
-bool SudokuLauncher::userInput(){
+bool SudokuLauncher::userInput() {
     std::cout << "Enter number of rows/columns in the Sudoku:\n";
     std::cin >> this->n;
-    if(sqrt(this->n) != (int)sqrt(this->n)) return false;
+    if(int root = std::sqrt(this->n); root * root != this->n) return false;
     this->nums = std::vector<int>(n * n, 0);
     std::cout << "Paste unsolved Sudoku:\n";
     for(int i = 0; i < n * n; i++) {
