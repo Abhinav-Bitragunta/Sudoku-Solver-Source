@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <chrono>
 #include "Sudoku.hpp"
 #include "SudokuFunctions.hpp"
 
@@ -22,12 +23,18 @@ void SudokuLauncher::launch() {
     Sudoku s(this->n, this->nums);
     std::cout << "Board before solving:\n";
     s.printBoard("\033[0m");
-    if(s.solve()) {
+    auto start = std::chrono::high_resolution_clock::now();
+    bool solveSuccess = s.solve();
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    if(solveSuccess) {
         std::cout << "Solution:\n";
         s.printBoard("\033[32m");
     } else {
         std::cout << "\033[31m" << "No solution found.\n" << "\033[0m";
     }
+    std::cout << std::format("Time elapsed: {} microseconds.\n",duration);
 }
 
 bool SudokuLauncher::userInput() {

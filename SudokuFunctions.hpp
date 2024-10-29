@@ -23,18 +23,19 @@ void Sudoku::set(int row, int col, int val) {
 
 void Sudoku::printBoard(std::string color) {
     size_t gridSize = std::sqrt(this->n);
+    std::string horizontalLine(gridSize * 3 + this->n * 3 + 1, '-');
     std::cout << color;
     for(int row = 0; row < this->n; row++) {
-        if(row % gridSize == 0) std::cout << std::endl;
+        if(row % gridSize == 0) std::cout << horizontalLine << std::endl;
 
         for(int col = 0; col < this->n; col++) {
-            if(col % gridSize == 0) std::cout << "|\t";
-            std::cout << std::format("{}\t", this->at(row, col));
+            if(col % gridSize == 0) std::cout << "|  ";
+            std::cout << std::format("{}{} ", this->at(row, col), (((this->at(row, col) > 9 || col == this->n -1) && !(this->at(row,col) <=9 && col == this->n -1))?"":" "));
         }
 
-        std::cout << std::endl;
+        std::cout << "|  " << std::endl;
     }
-    std::cout << "\033[0m";
+    std::cout << horizontalLine << "\033[0m\n";
 }
 
 bool Sudoku::rowSafe(int row, int col, int val) {
