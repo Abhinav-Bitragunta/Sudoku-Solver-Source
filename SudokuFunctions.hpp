@@ -1,98 +1,104 @@
 #pragma once
 #include <math.h>
-
+#include <cstdint>
 #include <format>
 #include <iostream>
 #include <string>
-
 #include "Sudoku.hpp"
 
-Sudoku::Sudoku(const size_t n, const std::vector<int> &Board) {
-    this->n = n;
-    this->BoardState = std::vector<int>(Board);
-    std::cout << std::format("Sudoku board of size {}*{} has been initialized.\n", n, n);
-}
-
-const int &Sudoku::at(int row, int col) {
+const int& Sudoku::at(int row, int col) {
     return this->BoardState[row * this->n + col];
+}
+int Sudoku::gridNum(int row, int col) {
+    size_t gridSize = sqrt(this->n);
+    row /= gridSize;
+    col /= gridSize;
+    return row * gridSize + col;
 }
 
 void Sudoku::set(int row, int col, int val) {
-    this->BoardState[row * this->n + col] = val;
+    int index = row * this->n + col;
+    int prev  = this->BoardState[index];
+    this->BoardState[index] = val;
+
+    int gridIdx = gridNum(row, col);
+    if(!val) {
+        this->RowBitBoard[row]      &= ~(1U << prev);
+        this->ColumnBitBoard[col]   &= ~(1U << prev);
+        this->GridBitBoard[gridIdx] &= ~(1U << prev);
+    } else {
+        this->RowBitBoard[row]      |= (1U << val);
+        this->ColumnBitBoard[col]   |= (1U << val);
+        this->GridBitBoard[gridIdx] |= (1U << val);
+    }
 }
 
 void Sudoku::printBoard(std::string color) {
     size_t gridSize = std::sqrt(this->n);
-    std::string horizontalLine(gridSize * 3 + this->n * 3 + 1, '-');
+    std::string horizontalLine(3 * (gridSize + this->n) + 1, '-');
+
     std::cout << color;
     for(int row = 0; row < this->n; row++) {
         if(row % gridSize == 0) std::cout << horizontalLine << std::endl;
 
         for(int col = 0; col < this->n; col++) {
             if(col % gridSize == 0) std::cout << "|  ";
-            std::cout << std::format("{}{} ", this->at(row, col), (((this->at(row, col) > 9 || col == this->n - 1) && !(this->at(row, col) <= 9 && col == this->n - 1)) ? "" : " "));
+            std::cout << std::format("{}{} ", this->at(row, col), ((this->at(row, col) > 9) ? "" : " "));
         }
 
-        std::cout << "|  " << std::endl;
+        std::cout << "|  \n";
     }
     std::cout << horizontalLine << "\033[0m\n";
 }
 
 bool Sudoku::rowSafe(int row, int col, int val) {
-    for(int i = 0; i < this->n; i++) {
-        if(this->at(row, i) == val && i != col) return false;
-    }
-    return true;
+    return !(RowBitBoard[row] & 1U << val);
 }
 
 bool Sudoku::columnSafe(int row, int col, int val) {
-    for(int i = 0; i < this->n; i++) {
-        if(this->at(i, col) == val && i != row) return false;
-    }
-    return true;
+    return !(ColumnBitBoard[col] & 1U << val);
 }
 
 bool Sudoku::gridSafe(int row, int col, int val) {
-    size_t gridSize = std::sqrt(this->n);
-    int startRow = row - (row % gridSize);
-    int startCol = col - (col % gridSize);
+    return !(GridBitBoard[gridNum(row, col)] & 1U << val);
+}
 
-    for(int r = startRow; r < startRow + gridSize; r++) {
-        for(int c = startCol; c < startCol + gridSize; c++) {
-            if(this->at(r, c) == val && row != r && col != c) return false;
+//Attempts to construct a board of given size. If valid returns true else false.
+bool Sudoku::construct(const size_t& n, const std::vector<int>& Board) {
+    this->n = n;
+    this->BoardState  = std::vector<int>(Board);
+    this->RowBitBoard = this->ColumnBitBoard = this->GridBitBoard = std::vector<uint32_t>(this->n, 0);
+
+    for(int row = 0; row < this->n; row++) {
+        for(int col = 0; col < this->n; col++) {
+            if(this->at(row, col) < 0 || this->at(row, col) > this->n) return false;
+            
+            uint32_t onBit = 1U << (this->at(row, col));
+            if(onBit == 1) continue;
+            
+            if((this->RowBitBoard[row] | this->ColumnBitBoard[col] | this->GridBitBoard[gridNum(row, col)]) & onBit) return false;
+
+            this->RowBitBoard[row] |= onBit;
+            this->ColumnBitBoard[col] |= onBit;
+            this->GridBitBoard[gridNum(row, col)] |= onBit;
         }
     }
     return true;
 }
 
-bool Sudoku::validState() {
-    for(int row = 0; row < this->n; row++) {
-        for(int col = 0; col < this->n; col++) {
-            int val = this->at(row, col);
+bool Sudoku::solve(int r, int c) {
+    if(r == this->n)    return true;
+    if(c == this->n)    return solve(r + 1, 0);
+    if(this->at(r, c))  return solve(r, c + 1);
 
-            if(val!=0 && !(gridSafe(row,col,val) && rowSafe(row,col,val) && columnSafe(row,col,val) && val <= (int)this->n)) return false;
-        }
-    }
-    return true;
-}
-
-std::pair<int, int> Sudoku::firstEmptyLocation() {
-    for(int row = 0; row < this->n; row++) {
-        for(int col = 0; col < this->n; col++) {
-            if(this->at(row, col) <= 0) return std::make_pair(row, col);
-        }
-    }
-    return std::make_pair(this->n, this->n);
-}
-
-bool Sudoku::solve() {
-    auto [row, col] = this->firstEmptyLocation();
-    if(row == this->n || col == this->n) return true;
     for(int candidate = 1; candidate <= this->n; candidate++) {
-        if(this->gridSafe(row, col, candidate) && this->rowSafe(row, col, candidate) && this->columnSafe(row, col, candidate)) {
-            this->set(row, col, candidate);
-            if(this->solve()) return true;
-            this->set(row, col, 0);
+        
+        if(this->gridSafe(r, c, candidate) && this->rowSafe(r, c, candidate) && this->columnSafe(r, c, candidate)) {
+            
+            this->set(r, c, candidate);
+            if(this->solve(r, c + 1)) return true;
+            this->set(r, c, 0);
+
         }
     }
     return false;
