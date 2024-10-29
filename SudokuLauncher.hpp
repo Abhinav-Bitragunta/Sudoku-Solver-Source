@@ -21,12 +21,12 @@ void SudokuLauncher::launch() {
     }
     Sudoku s(this->n, this->nums);
     std::cout << "Board before solving:\n";
-    s.printBoard();
+    s.printBoard("\033[0m");
     if(s.solve()) {
         std::cout << "Solution:\n";
-        s.printBoard();
+        s.printBoard("\033[32m");
     } else {
-        std::cout << "No solution found.\n";
+        std::cout << "\033[31m" << "No solution found.\n" << "\033[0m";
     }
 }
 

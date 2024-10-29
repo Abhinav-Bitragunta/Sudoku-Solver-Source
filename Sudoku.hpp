@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 class Sudoku{
     private:
@@ -17,7 +18,7 @@ class Sudoku{
         Sudoku(const size_t n, const std::vector<int>& Board);
         Sudoku(){}
         ~Sudoku();
-        void printBoard();
+        void printBoard(std::string color);
         bool solve();
 
 };

@@ -1,8 +1,9 @@
 #pragma once
+#include "Sudoku.hpp"
 #include <math.h>
 #include <format>
 #include <iostream>
-#include "Sudoku.hpp"
+#include <string>
 
 Sudoku::Sudoku(const size_t n, const std::vector<int> &Board) {
     this->n = n;
@@ -20,9 +21,9 @@ void Sudoku::set(int row, int col, int val) {
     this->BoardState[row * this->n + col] = val;
 }
 
-void Sudoku::printBoard() {
+void Sudoku::printBoard(std::string color) {
     size_t gridSize = std::sqrt(this->n);
-
+    std::cout << color;
     for(int row = 0; row < this->n; row++) {
         if(row % gridSize == 0) std::cout << std::endl;
 
@@ -33,6 +34,7 @@ void Sudoku::printBoard() {
 
         std::cout << std::endl;
     }
+    std::cout << "\033[0m";
 }
 
 bool Sudoku::rowSafe(int row, int col, int val) {
