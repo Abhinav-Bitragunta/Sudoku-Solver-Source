@@ -1,8 +1,10 @@
 #pragma once
+#include <math.h>
+
+#include <chrono>
 #include <iostream>
 #include <vector>
-#include <math.h>
-#include <chrono>
+
 #include "Sudoku.hpp"
 #include "SudokuFunctions.hpp"
 
@@ -17,10 +19,15 @@ class SudokuLauncher {
 };
 
 void SudokuLauncher::launch() {
-    while(!this->userInput()) {
-        std::cout << "Sudoku length/breadth must be a perfect square\n";
+    Sudoku s;
+    while(true) {
+        while(!this->userInput()) {
+            std::cout << "Sudoku length/breadth must be a perfect square.\n";
+        }
+        s = Sudoku(this->n, this->nums);
+        if(s.validState())  break;
+        std::cout << "\033[31m Illegal board state. \033[0m\n";
     }
-    Sudoku s(this->n, this->nums);
     std::cout << "Board before solving:\n";
     s.printBoard("\033[0m");
     auto start = std::chrono::high_resolution_clock::now();
@@ -32,9 +39,9 @@ void SudokuLauncher::launch() {
         std::cout << "Solution:\n";
         s.printBoard("\033[32m");
     } else {
-        std::cout << "\033[31m" << "No solution found.\n" << "\033[0m";
+        std::cout << "\033[31m No solution found. \033[0m\n";
     }
-    std::cout << std::format("Time elapsed: {} microseconds.\n",duration);
+    std::cout << std::format("Time elapsed: {} microseconds.\n", duration);
 }
 
 bool SudokuLauncher::userInput() {

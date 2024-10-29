@@ -17,9 +17,10 @@ class Sudoku{
     public:
         Sudoku(const size_t n, const std::vector<int>& Board);
         Sudoku(){}
-        ~Sudoku();
+        ~Sudoku(){}
         void printBoard(std::string color);
         bool solve();
+        bool validState();
 
 };
 

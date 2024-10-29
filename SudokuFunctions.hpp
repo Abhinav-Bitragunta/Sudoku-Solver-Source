@@ -1,17 +1,17 @@
 #pragma once
-#include "Sudoku.hpp"
 #include <math.h>
+
 #include <format>
 #include <iostream>
 #include <string>
+
+#include "Sudoku.hpp"
 
 Sudoku::Sudoku(const size_t n, const std::vector<int> &Board) {
     this->n = n;
     this->BoardState = std::vector<int>(Board);
     std::cout << std::format("Sudoku board of size {}*{} has been initialized.\n", n, n);
 }
-
-Sudoku::~Sudoku() { std::cout << "Solving complete.\n"; }
 
 const int &Sudoku::at(int row, int col) {
     return this->BoardState[row * this->n + col];
@@ -30,7 +30,7 @@ void Sudoku::printBoard(std::string color) {
 
         for(int col = 0; col < this->n; col++) {
             if(col % gridSize == 0) std::cout << "|  ";
-            std::cout << std::format("{}{} ", this->at(row, col), (((this->at(row, col) > 9 || col == this->n -1) && !(this->at(row,col) <=9 && col == this->n -1))?"":" "));
+            std::cout << std::format("{}{} ", this->at(row, col), (((this->at(row, col) > 9 || col == this->n - 1) && !(this->at(row, col) <= 9 && col == this->n - 1)) ? "" : " "));
         }
 
         std::cout << "|  " << std::endl;
@@ -65,10 +65,21 @@ bool Sudoku::gridSafe(int row, int col, int val) {
     return true;
 }
 
+bool Sudoku::validState() {
+    for(int row = 0; row < this->n; row++) {
+        for(int col = 0; col < this->n; col++) {
+            int val = this->at(row, col);
+
+            if(val!=0 && !(gridSafe(row,col,val) && rowSafe(row,col,val) && columnSafe(row,col,val) && val <= (int)this->n)) return false;
+        }
+    }
+    return true;
+}
+
 std::pair<int, int> Sudoku::firstEmptyLocation() {
     for(int row = 0; row < this->n; row++) {
         for(int col = 0; col < this->n; col++) {
-            if(!this->at(row, col)) return std::make_pair(row, col);
+            if(this->at(row, col) <= 0) return std::make_pair(row, col);
         }
     }
     return std::make_pair(this->n, this->n);
