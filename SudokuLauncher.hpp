@@ -9,14 +9,16 @@ class SudokuLauncher {
    private:
     size_t n;
     std::vector<int> nums;
-    void userInput();
+    bool userInput();
 
    public:
     void launch();
 };
 
 void SudokuLauncher::launch(){
-    this->userInput();
+    while(!this->userInput()){
+        std::cout << "Sudoku length/breadth must be a perfect square\n";
+    }
     Sudoku s(this->n, this->nums);
     std::cout << "Board before solving:\n";
     s.printBoard();
@@ -28,12 +30,14 @@ void SudokuLauncher::launch(){
     }
 }
 
-void SudokuLauncher::userInput(){
+bool SudokuLauncher::userInput(){
     std::cout << "Enter number of rows/columns in the Sudoku:\n";
     std::cin >> this->n;
+    if(sqrt(this->n) != (int)sqrt(this->n)) return false;
     this->nums = std::vector<int>(n * n, 0);
     std::cout << "Paste unsolved Sudoku:\n";
     for(int i = 0; i < n * n; i++) {
         std::cin >> this->nums[i];
     }
+    return true;
 }
