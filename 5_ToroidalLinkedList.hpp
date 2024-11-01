@@ -1,74 +1,56 @@
 #pragma once
-#include "ConstraintMatrix.hpp"
-#include "Node.hpp"
+#include "3_Node.hpp"
+#include "4_ConstraintMatrix.hpp"
 
 class ToroidalLinkedList {
     ColumnNode      *head;
     size_t          n;
 
    public:
-    
+    ~ToroidalLinkedList();
     ColumnNode*     construct   (size_t n, ConstraintMatrix& M);
     void            createCols  ();
-    void            destroy     ();
 };
 
 
-void ToroidalLinkedList::destroy() {
-    if(this->head->right == this->head) {
-        delete this->head;
-        head = nullptr;
-        return;
-    }
-    ColumnNode* current = static_cast<ColumnNode*>(this->head->right);
-    ColumnNode* next;
+
+ToroidalLinkedList::~ToroidalLinkedList() {
+    ColumnNode *current = static_cast<ColumnNode*>(this->head->right);
+    ColumnNode *next;
+    int count = 0;
 
     while(current != this->head) {
         next = static_cast<ColumnNode*>(current->right);
 
-        Node* verticalCurrent   = current->down;
+        Node *verticalCurrent   = current->down;
         while(verticalCurrent != current) {
-            Node* nodeToDelete  = verticalCurrent;
+            Node *nodeToDelete  = verticalCurrent;
             verticalCurrent     = verticalCurrent->down;
             delete nodeToDelete;
+            count++;
         }
 
         delete current;
+        count ++;
         current = next;
     }
     delete this->head;
+    count++;
     head = nullptr;
-    std::cout << "\nDestruction complete." << std::endl;
+    std::cout << std::format("\nHeap memory freed. {} nodes destroyed.\n", count);
 }
 
 void ToroidalLinkedList::createCols() {
     size_t numCols      = 4 * n * n;
-    ColumnNode* prev    = this->head;
+    ColumnNode *prev    = this->head;
 
     for(size_t col = 0; col < numCols; col++) {
-        ColumnNode* temp = new ColumnNode;
-        ColData& id = temp->data;
-
-        if(col < 3 * n * n) {
-            int digit = (col / (3 * n)) + 1;
-            id.number = digit;
-            int index = col - (digit - 1) * 3 * n;
-
-            if(index < n) {
-                id.constraint   = 0;
-                id.position     = index;
-            } else if(index < 2 * n) {
-                id.constraint   = 1;
-                id.position     = index - n;
-            } else {
-                id.constraint   = 2;
-                id.position     = index - 2 * n;
-            }
-        } else {
-            id.constraint       = 3;
-            id.position         = col - 3 * n * n;
-            id.number           = -1;
-        }
+        ColumnNode *temp = new ColumnNode;
+        
+        temp->data.number = col%n +1;
+        temp->data.constraint = col/(n*n);
+        temp->data.position = (col < n*n)? col : (col/n)%n ;
+        
         prev->right      = temp;
         temp->left       = prev;
         temp->right      = this->head;
@@ -88,14 +70,14 @@ ColumnNode* ToroidalLinkedList::construct(size_t n, ConstraintMatrix& M) {
 
     for(size_t row = 0; row < numrows; row++) {
         Node *prev = nullptr, *first = nullptr;
-        ColumnNode* columnHead = static_cast<ColumnNode*>(this->head->right);
+        ColumnNode *columnHead = static_cast<ColumnNode*>(this->head->right);
 
         for(size_t col = 0; col < numcols; col++) {
             if(!M.at(row, col)) {
                 columnHead  = static_cast<ColumnNode*>(columnHead->right);
                 continue;
             }
-            Node* temp      = new Node;
+            Node *temp      = new Node;
             temp->up        = columnHead->up;
             temp->down      = columnHead;
             temp->col       = columnHead;

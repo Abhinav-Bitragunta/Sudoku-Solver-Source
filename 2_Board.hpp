@@ -20,6 +20,7 @@ class Board {
 
     const int&                  at                  (const size_t& row, const size_t& col);
     void                        set                 (const size_t& row, const size_t& col, const int& val);
+    void                        set                 (const size_t& idx, const int& val);
     size_t                      gridNum             (const size_t& row, const size_t& col);
     const size_t                rowlength           ();
 
@@ -81,6 +82,6 @@ size_t Board::gridNum(const size_t& row, const size_t& col) {
 
 const int& Board::at(const size_t& row, const size_t& col)              {   return board[row * this->N + col];  }
 void Board::set(const size_t& row, const size_t& col, const int& val)   {   board[row * this->N + col] = val;   }
+void Board::set(const size_t& idx, const int& val)                      {   board[idx] = val;   }
 
 const size_t Board::rowlength()                                         {   return this->N; }
-

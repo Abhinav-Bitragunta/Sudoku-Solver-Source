@@ -14,10 +14,7 @@ class Node {
     Node        *left;
     ColumnNode  *col;
     Node() {
-        up      = this;
-        right   = this;
-        down    = this;
-        left    = this;
+        up = right = down = left = this;
         col     = nullptr;
     }
 };
@@ -39,11 +36,7 @@ class ColumnNode : public Node {
     ColumnNode() {
         size    = 0;
         data    = ColData();
-        up      = this;
-        right   = this;
-        down    = this;
-        left    = this;
-        col     = this;
+        up = right = down = left = this;
     }
 };
 
@@ -61,7 +54,6 @@ void cover(Node *c) {
         }
         i = i->down;
     }
-    // std::cout << "Column covered.\n";
 }
 
 void uncover(Node *c) {
@@ -78,5 +70,4 @@ void uncover(Node *c) {
     }
     c->right->left = c;
     c->left->right = c;
-    // std::cout << "Column uncovered.\n";
 }
