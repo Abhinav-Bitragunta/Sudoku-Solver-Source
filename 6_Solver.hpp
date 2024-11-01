@@ -62,7 +62,7 @@ void Solver::launch() {
     //black magic below
     std::cout << std::format("\nTime to \033[1;33mconstruct Constraint matrix, Toroidal Linked List\033[0m: \033[34m{} microseconds.\033[0m", d1);
     std::cout << std::format("\nTime to \033[1;33msolve the puzzle\033[0m, using \033[1;33mdancing links\033[0m:             \033[36m{} microseconds.\033[0m", d2);
-    std::cout << std::format("\nTotal time elapsed:                                        \033[34m{} microseconds.\033[0m\n", d1 + d2);  
+    std::cout << std::format("\n\033[1;42mTotal time elapsed:                                        {} microseconds.\033[0m\n", d1 + d2);  
 }
 
 bool Solver::search() {
