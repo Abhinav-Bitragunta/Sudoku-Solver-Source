@@ -13,8 +13,8 @@ class ConstraintMatrix {
 
    public:
     void                construct       (Board& b);
-    void                set             (const size_t& row, const size_t& col, bool val);
-    bool                at              (const size_t& row, const size_t& col);
+    inline void         set             (const size_t& row, const size_t& col, bool val);
+    inline bool         at              (const size_t& row, const size_t& col);
     bool                cantPlaceHere   (const size_t& row, const size_t& col, size_t& val);
     size_t              getRows         ();
     size_t              getCols         ();
@@ -76,8 +76,8 @@ bool ConstraintMatrix::cantPlaceHere(const size_t& row, const size_t& col, size_
     return false;
 }
 
-void ConstraintMatrix::set(const size_t& row, const size_t& col, bool val)  {   this->data[row * this->numCols + col] = val;    }
-bool ConstraintMatrix::at(const size_t& row, const size_t& col)             {   return this->data[(row * this->numCols) + col]; }
+inline void ConstraintMatrix::set(const size_t& row, const size_t& col, bool val)  {   this->data[row * this->numCols + col] = val;    }
+inline bool ConstraintMatrix::at(const size_t& row, const size_t& col)             {   return this->data[(row * this->numCols) + col]; }
 
 size_t ConstraintMatrix::getRows()                                          {   return this->numRows;   }
 size_t ConstraintMatrix::getCols()                                          {   return this->numCols;   }
