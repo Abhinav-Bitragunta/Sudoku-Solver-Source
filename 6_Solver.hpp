@@ -78,6 +78,11 @@ bool Solver::search() {
             j = j->right;
         }
         if(search()){ //only want one solution.
+            j = r->left;
+            while(j != r) {
+                uncover(j->col);
+                j = j->left;
+            }
             uncover(c);
             return true;
         }
