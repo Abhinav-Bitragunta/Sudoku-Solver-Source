@@ -17,7 +17,7 @@ class ToroidalLinkedList {
 ToroidalLinkedList::~ToroidalLinkedList() {
     ColumnNode *current = static_cast<ColumnNode*>(this->head->right);
     ColumnNode *next;
-    int count = 0;
+    int colCount = 0, verticalCount = 0, headCount = 0;
 
     while(current != this->head) {
         next = static_cast<ColumnNode*>(current->right);
@@ -27,17 +27,17 @@ ToroidalLinkedList::~ToroidalLinkedList() {
             Node *nodeToDelete  = verticalCurrent;
             verticalCurrent     = verticalCurrent->down;
             delete nodeToDelete;
-            count++;
+            verticalCount++;
         }
 
         delete current;
-        count ++;
+        colCount ++;
         current = next;
     }
     delete this->head;
-    count++;
+    headCount++;
     head = nullptr;
-    std::cout << std::format("\nHeap memory freed. {} nodes destroyed.\n", count);
+    std::cout << std::format("\nHeap memory freed. {} column nodes, {} vertical list nodes, and {} head node for a total of {} nodes destroyed.\n", colCount, verticalCount, headCount, colCount + verticalCount + headCount);
 }
 
 void ToroidalLinkedList::createCols() {
