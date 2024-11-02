@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class Board {
     std::vector<int>            board;
@@ -17,6 +18,7 @@ class Board {
     Board(){}
     Board(const size_t n);
     bool                        construct           (const std::vector<int>& newboard);
+    inline bool                 unsafe              (size_t row, size_t col, size_t val);
 
     inline const int&           at                  (const size_t& row, const size_t& col);
     inline void                 set                 (const size_t& row, const size_t& col, const int& val);
@@ -85,3 +87,10 @@ inline void Board::set(const size_t& row, const size_t& col, const int& val)   {
 inline void Board::set(const size_t& idx, const int& val)                      {   board[idx] = val;   }
 
 const size_t Board::rowlength()                                         {   return this->N; }
+
+//It exists already, and that value is not equal to val. OR It doesn't exist. and it violates
+inline bool Board::unsafe(size_t row, size_t col, size_t val){
+    return  (this->at(row,col) && (this->at(row,col) != val)) || (!this->at(row,col) && ((RowBitBoard[row] | ColumnBitBoard[col] | GridBitBoard[gridNum(row,col)]) & 1U << val));
+}
+ 
+
