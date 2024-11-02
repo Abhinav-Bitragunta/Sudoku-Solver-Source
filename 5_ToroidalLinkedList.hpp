@@ -6,10 +6,11 @@ class ToroidalLinkedList {
     ColumnNode      *head;
     size_t          n;
 
+    void            createCols  ();
+    
    public:
     ~ToroidalLinkedList();
     ColumnNode*     construct   (size_t n, ConstraintMatrix& M);
-    void            createCols  ();
 };
 
 
@@ -47,9 +48,9 @@ void ToroidalLinkedList::createCols() {
     for(size_t col = 0; col < numCols; col++) {
         ColumnNode *temp = new ColumnNode;
         
-        temp->data.number = col%n +1;
-        temp->data.constraint = col/(n*n);
-        temp->data.position = (col < n*n)? col : (col/n)%n ;
+        temp->data.number       = col%n +1;
+        temp->data.constraint   = col/(n*n);
+        temp->data.position     = (col < n*n)? col : (col/n)%n ;
         
         prev->right      = temp;
         temp->left       = prev;

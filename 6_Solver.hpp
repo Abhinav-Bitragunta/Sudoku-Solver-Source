@@ -12,15 +12,15 @@ class Solver {
     size_t              n;
     std::vector<int>    nums;
 
+    void                convertToBoard  ();
+    bool                userInput       ();
+    bool                search          ();
+    ColumnNode*         chooseColumn    ();
+
    public:
     
     void                launch          ();
-    void                convertToBoard  ();
     
-    bool                userInput       ();
-    bool                search          ();
-    
-    ColumnNode*         chooseColumn    ();
 };
 
 void Solver::launch() {
