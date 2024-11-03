@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <stack>
 #include "2_Board.hpp"
 #include "3_Node.hpp"
 #include "4_ConstraintMatrix.hpp"
@@ -11,10 +12,13 @@ class Solver {
     Board               SolvedBoard;
     size_t              n;
     std::vector<int>    nums;
+    std::vector<std::vector<Node*>> allSolutions;
 
-    void                convertToBoard  ();
+    void                convertToBoard  (std::vector<Node*>& _solution);
+    void                printSolutions  ();
+
+    void                search          ();
     bool                userInput       ();
-    bool                search          ();
     ColumnNode*         chooseColumn    ();
 
    public:
@@ -24,9 +28,10 @@ class Solver {
 };
 
 void Solver::launch() {
-    Board               board;
-    ConstraintMatrix    M    ;
-    ToroidalLinkedList  L    ;
+    Board                board;
+    ConstraintMatrix     M    ;
+    ToroidalLinkedList   L    ;
+    this->allSolutions = std::vector<std::vector<Node*>>();
     while(true) {
         while(!this->userInput()) {
             std::cout << "\033[31m Invalid board size detected, it must be a perfect square. \033[0m\n";
@@ -42,31 +47,31 @@ void Solver::launch() {
     this->head          = L.construct(this->n, M);
 
     auto t2 = std::chrono::high_resolution_clock::now();
-
-    bool solveSuccess   = search();
-
+    search();
     auto t3 = std::chrono::high_resolution_clock::now();
     
     auto d1 = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
     auto d2 = std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count();
 
-    if(solveSuccess) {
-        this->convertToBoard();
-        std::cout << "\033[32m\n Solution:\033[0m\n";
-        this->SolvedBoard.printBoard("\033[32m");
+    if(!allSolutions.empty()) {
+        this->printSolutions();
+        std::cout << std::format("\033[1;32m{}\033[1m solution(s) found.\033[0m\n",this->allSolutions.size());
 
     } else {
         std::cout << "\033[31m No solutions found. \033[0m\n";
     }
-    
+
     //black magic below
-    std::cout << std::format("\nTime to \033[1;33mconstruct Constraint matrix, Toroidal Linked List\033[0m: \033[34m{} microseconds.\033[0m", d1);
-    std::cout << std::format("\nTime to \033[1;33msolve the puzzle\033[0m, using \033[1;33mdancing links\033[0m:             \033[36m{} microseconds.\033[0m", d2);
-    std::cout << std::format("\n\033[1;42mTotal time elapsed:                                        {} microseconds.\033[0m\n", d1 + d2);  
+    std::cout << std::format("\nTime to \033[1;33mconstruct Constraint matrix, Toroidal Linked List\033[0m:\t\t\t  \033[34m{} microseconds.\033[0m", d1);
+    std::cout << std::format("\nTime to find \033[1;33mALL solutions to the puzzle\033[0m, using \033[1;33mdancing links\033[0m(Search+Copy time):  \033[36m{} microseconds.\033[0m", d2);
+    std::cout << std::format("\n\033[1;42mTotal time elapsed:                                                               {} microseconds.\033[0m\n", d1 + d2);  
 }
 
-bool Solver::search() {
-    if(head->right == head) return true;
+void Solver::search() {
+    if(head->right == head){
+        this->allSolutions.emplace_back(this->solution);
+        return;
+    } 
     ColumnNode* c = chooseColumn();
     cover(c);
     Node* r = c->down;
@@ -77,15 +82,7 @@ bool Solver::search() {
             cover(j->col);
             j = j->right;
         }
-        if(search()){ //only want one solution.
-            j = r->left;
-            while(j != r) {
-                uncover(j->col);
-                j = j->left;
-            }
-            uncover(c);
-            return true;
-        }
+        search();
         solution.pop_back();
         j = r->left;
         while(j != r) {
@@ -95,7 +92,7 @@ bool Solver::search() {
         r = r->down;
     }
     uncover(c);
-    return false;
+    return;
 }
 
 ColumnNode* Solver::chooseColumn() {
@@ -108,9 +105,9 @@ ColumnNode* Solver::chooseColumn() {
     return smallest;
 }
 
-void Solver::convertToBoard() {
+void Solver::convertToBoard(std::vector<Node*>& _solution) {
     this->SolvedBoard = Board(this->n);
-    for(auto* element : this->solution) {
+    for(auto* element : _solution) {
         int idx,val,constraintType;
         Node* next  = element;
         do {
@@ -146,4 +143,14 @@ bool Solver::userInput() {
     }
 
     return true;
+}
+
+void Solver::printSolutions(){
+    size_t cnt = 0;
+    for(auto& _solution : this->allSolutions){
+        this->convertToBoard(_solution);
+        std::cout << std::format("\n\033[1mSolution {}:\033[0m\n", ++cnt);
+        this->SolvedBoard.printBoard("\033[32m");
+        std::cout << "\n";
+    }
 }
