@@ -48,10 +48,7 @@ void ToroidalLinkedList::createCols() {
     for(size_t col = 0; col < numCols; col++) {
         ColumnNode *temp = new ColumnNode;
         
-        temp->data.number       = col%n +1;
-        temp->data.constraint   = col/(n*n);
-        temp->data.position     = (col < n*n)? col : (col/n)%n ;
-        
+        temp->index      = col;
         prev->right      = temp;
         temp->left       = prev;
         temp->right      = this->head;

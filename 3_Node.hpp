@@ -4,7 +4,6 @@
 #include <string>
 class Node;
 class ColumnNode;
-class ColData;
 
 class Node {
    public:
@@ -19,28 +18,18 @@ class Node {
     }
 };
 
-class ColData {
-   public:
-    int constraint;
-    int number;
-    int position;
-    ColData() {
-        constraint = number = position = -1;
-    }
-};
-
 class ColumnNode : public Node {
    public:
     size_t size;
-    ColData data;
+    size_t index;
+    
     ColumnNode() {
         size    = 0;
-        data    = ColData();
         up = right = down = left = this;
     }
 };
 
-void cover(Node *c) {
+void cover(ColumnNode *c) {
     c->right->left = c->left;
     c->left->right = c->right;
     Node *i = c->down;
@@ -49,19 +38,19 @@ void cover(Node *c) {
         while(j != i) {
             j->down->up = j->up;
             j->up->down = j->down;
-            ((ColumnNode *)j->col)->size--;
+            static_cast<ColumnNode*>(j->col)->size--;
             j = j->right;
         }
         i = i->down;
     }
 }
 
-void uncover(Node *c) {
+void uncover(ColumnNode *c) {
     Node *i = c->up;
     while(i != c) {
         Node *j = i->left;
         while(j != i) {
-            ((ColumnNode *)j->col)->size++;
+            static_cast<ColumnNode*>(j->col)->size++;
             j->down->up = j;
             j->up->down = j;
             j = j->left;

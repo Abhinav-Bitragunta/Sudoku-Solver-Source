@@ -6,7 +6,6 @@
 class ConstraintMatrix {
    private:
     std::vector<bool>   data;
-    std::vector<std::vector<int>>    clues;
     size_t              numCols;
     size_t              numRows;
     size_t              gridSize;
@@ -42,12 +41,12 @@ void ConstraintMatrix::construct(Board& b) {
                         RCidx   = row     * n   + col             ,      // constr 0: row-col
                         RVidx   = row     * n   + val + n * n     ,      // constr 1: row-num
                         CVidx   = col     * n   + val + 2 * n * n ,      // constr 2: col-num
-                        GNidx   = gridnum * n   + val + 3 * n * n ;      // constr 3: grid-num
+                        GVidx   = gridnum * n   + val + 3 * n * n ;      // constr 3: grid-num
 
                 this->set(rowidx, RCidx,    true);
                 this->set(rowidx, RVidx,    true);
                 this->set(rowidx, CVidx,    true);
-                this->set(rowidx, GNidx,    true);
+                this->set(rowidx, GVidx,    true);
             }
         }
     }

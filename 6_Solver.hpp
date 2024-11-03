@@ -111,15 +111,21 @@ ColumnNode* Solver::chooseColumn() {
 void Solver::convertToBoard() {
     this->SolvedBoard = Board(this->n);
     for(auto* element : this->solution) {
-        int idx,val;
+        int idx,val,constraintType;
         Node* next  = element;
         do {
-            if(next->col->data.constraint == 1) {        //row-num constraint.
-                val = next->col->data.number;
-            } else if(next->col->data.constraint == 0) { //row-col constraint.
-                idx = next->col->data.position;
+            constraintType  = (next->col->index)/(n*n);
+            
+            switch(constraintType){
+                case 0:
+                    idx     = next->col->index;
+                    break;
+                default:
+                    val     = (next->col->index)%(this->n) + 1;
+                    break;
             }
-            next    = next->right;
+            
+            next            = next->right;
         } while(element != next);
 
         SolvedBoard.set(idx,val);
