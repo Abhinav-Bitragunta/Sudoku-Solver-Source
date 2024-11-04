@@ -1,5 +1,5 @@
 #pragma once
-#include <math.h>
+#include <cmath>
 #include <cstddef>
 #include <format>
 #include <iostream>

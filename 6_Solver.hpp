@@ -65,6 +65,7 @@ void Solver::launch() {
     std::cout << std::format("\nTime to \033[1;33mconstruct Constraint matrix, Toroidal Linked List\033[0m:\t\t\t  \033[34m{} microseconds.\033[0m", d1);
     std::cout << std::format("\nTime to find \033[1;33mALL solutions to the puzzle\033[0m, using \033[1;33mdancing links\033[0m(Search+Copy time):  \033[36m{} microseconds.\033[0m", d2);
     std::cout << std::format("\n\033[1;42mTotal time elapsed:                                                               {} microseconds.\033[0m\n", d1 + d2);  
+    if(allSolutions.size() > 1) std::cout << std::format("\033[1;33mAverage time\033[0m to find each solution to the puzzle:      \t                          \033[36m{} microseconds.\033[0m\n", static_cast<float>(1.0*d2/allSolutions.size()));
 }
 
 void Solver::search() {
@@ -72,17 +73,17 @@ void Solver::search() {
         this->allSolutions.emplace_back(this->solution);
         return;
     } 
-    ColumnNode* c = chooseColumn();
+    ColumnNode *c = chooseColumn();
     cover(c);
-    Node* r = c->down;
+    Node *r = c->down;
     while(r != c) {
         solution.push_back(r);
-        Node* j = r->right;
+        Node *j = r->right;
         while(j != r) {
             cover(j->col);
             j = j->right;
         }
-        search();
+        if(allSolutions.size() < 10) search();
         solution.pop_back();
         j = r->left;
         while(j != r) {
@@ -96,11 +97,11 @@ void Solver::search() {
 }
 
 ColumnNode* Solver::chooseColumn() {
-    ColumnNode* headRight   = (ColumnNode*)this->head->right;
-    ColumnNode* smallest    = headRight;
+    ColumnNode *headRight   = static_cast<ColumnNode*>(this->head->right);
+    ColumnNode *smallest    = headRight;
     while(headRight->right != this->head) {
         if(headRight->size < smallest->size) smallest = headRight;
-        headRight   = (ColumnNode*)headRight->right;
+        headRight   = static_cast<ColumnNode*>(headRight->right);
     }
     return smallest;
 }
@@ -109,7 +110,7 @@ void Solver::convertToBoard(std::vector<Node*>& _solution) {
     this->SolvedBoard = Board(this->n);
     for(auto* element : _solution) {
         int idx,val,constraintType;
-        Node* next  = element;
+        Node *next  = element;
         do {
             constraintType  = (next->col->index)/(n*n);
             

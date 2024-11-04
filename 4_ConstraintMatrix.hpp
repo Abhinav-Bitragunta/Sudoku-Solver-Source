@@ -1,5 +1,5 @@
 #pragma once
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include "2_Board.hpp"
 
@@ -21,11 +21,12 @@ class ConstraintMatrix {
 
 void ConstraintMatrix::construct(Board& b) {
     size_t n        = b.rowlength();
+    size_t nSquared = n*n;
 
-    this->gridSize  = std::sqrt(n);
+    this->gridSize  = static_cast<size_t>(std::sqrt(n));
 
-    this->numCols   = 4 * n * n;
-    this->numRows   = n * n * n;
+    this->numCols   = 4 * nSquared;
+    this->numRows   = n * nSquared;
 
     this->data      = std::vector<bool>(this->numCols * this->numRows, false);
 
@@ -35,13 +36,13 @@ void ConstraintMatrix::construct(Board& b) {
             for(size_t val = 0; val < n; val++) {
                 if(b.unsafe(row,col,val+1)) continue;
 
-                size_t  rowidx  = row * n * n + col * n + val,           // rows are 0-728, represent in base 9 as (row)(col)(val)
+                size_t  rowidx  = row * nSquared + col * n + val,           // rows are 0-728, represent in base 9 as (row)(col)(val)
                         gridnum = (row / gridSize) * gridSize + (col / gridSize),
 
-                        RCidx   = row     * n   + col             ,      // constr 0: row-col
-                        RVidx   = row     * n   + val + n * n     ,      // constr 1: row-num
-                        CVidx   = col     * n   + val + 2 * n * n ,      // constr 2: col-num
-                        GVidx   = gridnum * n   + val + 3 * n * n ;      // constr 3: grid-num
+                        RCidx   = row     * n   + col                ,      // constr 0: row-col
+                        RVidx   = row     * n   + val + nSquared     ,      // constr 1: row-num
+                        CVidx   = col     * n   + val + 2 * nSquared ,      // constr 2: col-num
+                        GVidx   = gridnum * n   + val + 3 * nSquared ;      // constr 3: grid-num
 
                 this->set(rowidx, RCidx,    true);
                 this->set(rowidx, RVidx,    true);
