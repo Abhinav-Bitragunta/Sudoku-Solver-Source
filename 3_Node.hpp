@@ -12,9 +12,14 @@ class Node {
     Node        *down;
     Node        *left;
     ColumnNode  *col;
-    Node() {
-        up = right = down = left = this;
-        col     = nullptr;
+    Node(): 
+        up   (this),
+        right(this),
+        down (this),
+        left (this),
+        col  (nullptr) 
+    {
+
     }
 };
 
@@ -23,9 +28,9 @@ class ColumnNode : public Node {
     size_t size;
     size_t index;
     
-    ColumnNode() {
-        size    = 0;
-        up = right = down = left = this;
+    ColumnNode():
+        size(0)
+    {
     }
 };
 

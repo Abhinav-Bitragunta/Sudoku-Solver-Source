@@ -31,7 +31,7 @@ class Board {
 
 //Attempts to construct a Sudoku board given a user input. Returns false if invalid board state detected.
 bool Board::construct(const std::vector<int>& newboard) {
-    this->board = std::vector<int>(newboard);
+    this->board = newboard;
     this->N     = std::sqrt(newboard.size());
 
     this->RowBitBoard = this->ColumnBitBoard = this->GridBitBoard = std::vector<unsigned int>(this->N, 0);
@@ -87,9 +87,7 @@ inline void Board::set(const size_t& idx, const int& val)                      {
 
 const size_t Board::rowlength()                                         {   return this->N; }
 
-//It exists already, and that value is not equal to val. OR It doesn't exist. and it violates
+//It exists already, and that value is not equal to val. OR It doesn't exist and placement is illegal.
 inline bool Board::unsafe(size_t row, size_t col, size_t val){
     return  (this->at(row,col) && (this->at(row,col) != val)) || (!this->at(row,col) && ((RowBitBoard[row] | ColumnBitBoard[col] | GridBitBoard[gridNum(row,col)]) & 1U << val));
 }
- 
-
