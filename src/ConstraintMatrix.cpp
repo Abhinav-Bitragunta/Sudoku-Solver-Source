@@ -1,24 +1,6 @@
-#pragma once
-#include <cmath>
-#include <vector>
-#include "2_Board.hpp"
+#include "ConstraintMatrix.hpp"
 
-class ConstraintMatrix {
-   private:
-    std::vector<bool>   data;
-    size_t              numCols;
-    size_t              numRows;
-    size_t              gridSize;
-
-    inline void         set             (const size_t& row, const size_t& col, bool val);
-    
-   public:
-    void                construct       (Board& b);
-    inline bool         at              (const size_t& row, const size_t& col);
-    size_t              getRows         ();
-    size_t              getCols         ();
-};
-
+//Construct the matrix using given board.
 void ConstraintMatrix::construct(Board& b) {
     size_t n        = b.rowlength();
     size_t nSquared = n*n;
@@ -53,10 +35,14 @@ void ConstraintMatrix::construct(Board& b) {
     }
 }
 
-inline void ConstraintMatrix::set(const size_t& row, const size_t& col, bool val)  {   this->data[row * this->numCols + col] = val;    }
-inline bool ConstraintMatrix::at(const size_t& row, const size_t& col)             {   return this->data[(row * this->numCols) + col]; }
+//Set matrix[row][col] to val
+void ConstraintMatrix::set(const size_t& row, const size_t& col, bool val)  {   this->data[row * this->numCols + col] = val;    }
 
+//Return value at matrix[row][col]
+bool ConstraintMatrix::at(const size_t& row, const size_t& col)             {   return this->data[(row * this->numCols) + col]; }
+
+//Return number of rows in matrix
 size_t ConstraintMatrix::getRows()                                          {   return this->numRows;   }
+
+//Return number of columns in matrix
 size_t ConstraintMatrix::getCols()                                          {   return this->numCols;   }
-
-

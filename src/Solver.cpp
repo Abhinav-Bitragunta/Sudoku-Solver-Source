@@ -1,31 +1,4 @@
-#include <chrono>
-#include <iostream>
-#include <stack>
-#include "2_Board.hpp"
-#include "3_Node.hpp"
-#include "4_ConstraintMatrix.hpp"
-#include "5_ToroidalLinkedList.hpp"
-
-class Solver {
-    ColumnNode          *head;
-    std::vector<Node*>  solution;
-    Board               SolvedBoard;
-    size_t              n;
-    std::vector<int>    nums;
-    std::vector<std::vector<Node*>> allSolutions;
-
-    void                convertToBoard  (std::vector<Node*>& _solution);
-    void                printSolutions  ();
-
-    void                search          ();
-    bool                userInput       ();
-    ColumnNode*         chooseColumn    ();
-
-   public:
-    
-    void                launch          ();
-    
-};
+#include "Solver.hpp"
 
 void Solver::launch() {
     Board                board;
@@ -68,34 +41,36 @@ void Solver::launch() {
     if(allSolutions.size() > 1) std::cout << std::format("\033[1;33mAverage time\033[0m to find each solution to the puzzle:      \t                          \033[36m{} microseconds.\033[0m\n", static_cast<float>(1.0*d2/allSolutions.size()));
 }
 
+//Algorithm X implementation.
 void Solver::search() {
     if(head->right == head){
         this->allSolutions.emplace_back(this->solution);
         return;
     } 
     ColumnNode *c = chooseColumn();
-    cover(c);
+    this->cover(c);
     Node *r = c->down;
     while(r != c) {
         solution.push_back(r);
         Node *j = r->right;
         while(j != r) {
-            cover(j->col);
+            this->cover(j->col);
             j = j->right;
         }
         if(allSolutions.size() < 10) search();
         solution.pop_back();
         j = r->left;
         while(j != r) {
-            uncover(j->col);
+            this->uncover(j->col);
             j = j->left;
         }
         r = r->down;
     }
-    uncover(c);
+    this->uncover(c);
     return;
 }
 
+//Return pointer to column node with least number of vertical list nodes.
 ColumnNode* Solver::chooseColumn() {
     ColumnNode *headRight   = static_cast<ColumnNode*>(this->head->right);
     ColumnNode *smallest    = headRight;
@@ -106,6 +81,41 @@ ColumnNode* Solver::chooseColumn() {
     return smallest;
 }
 
+//Cover a column.
+void Solver::cover(ColumnNode *c) {
+    c->right->left = c->left;
+    c->left->right = c->right;
+    Node *i = c->down;
+    while(i != c) {
+        Node *j = i->right;
+        while(j != i) {
+            j->down->up = j->up;
+            j->up->down = j->down;
+            static_cast<ColumnNode*>(j->col)->size--;
+            j = j->right;
+        }
+        i = i->down;
+    }
+}
+
+//Uncover a column.
+void Solver::uncover(ColumnNode *c) {
+    Node *i = c->up;
+    while(i != c) {
+        Node *j = i->left;
+        while(j != i) {
+            static_cast<ColumnNode*>(j->col)->size++;
+            j->down->up = j;
+            j->up->down = j;
+            j = j->left;
+        }
+        i = i->up;
+    }
+    c->right->left = c;
+    c->left->right = c;
+}
+
+//Decode Node* to index,value
 void Solver::convertToBoard(std::vector<Node*>& _solution) {
     this->SolvedBoard = Board(this->n);
     for(auto* element : _solution) {
@@ -130,6 +140,7 @@ void Solver::convertToBoard(std::vector<Node*>& _solution) {
     }
 }
 
+//Take input from user, return false on non-square length entries
 bool Solver::userInput() {
     std::cout << "\nEnter number of rows/columns in the Sudoku: ";
     std::cin >> this->n;
