@@ -4,16 +4,19 @@ void Solver::launch() {
     Board                board;
     ConstraintMatrix     M    ;
     ToroidalLinkedList   L    ;
-    this->allSolutions = std::vector<std::vector<Node*>>();
+    
+    this->allSolutions = std::array<std::vector<Node*>,10>();
+    this->numSols      = 0;
+    
     while(true) {
         while(!this->userInput()) {
             std::cout << "\033[31m Invalid board size detected, it must be a perfect square. \033[0m\n";
         }
-        if(board.construct(this->nums)) break;
+        if(board.construct(this->userInputBoard)) break;
         std::cout << std::format("\033[31m Illegal board state. All values must be between 0 and {}, both inclusive. \033[0m\n", this->n);
     }
     
-    
+
     auto t1 = std::chrono::high_resolution_clock::now();
     
     M.construct(board);
@@ -26,9 +29,9 @@ void Solver::launch() {
     auto d1 = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
     auto d2 = std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count();
 
-    if(!allSolutions.empty()) {
+    if(this->numSols > 0) {
         this->printSolutions();
-        std::cout << std::format("\033[1;32m{}\033[1m solution(s) found.\033[0m\n",this->allSolutions.size());
+        std::cout << std::format("\033[1;32m{}\033[1m solution(s) found.\033[0m\n",this->numSols);
 
     } else {
         std::cout << "\033[31m No solutions found. \033[0m\n";
@@ -38,13 +41,14 @@ void Solver::launch() {
     std::cout << std::format("\nTime to \033[1;33mconstruct Constraint matrix, Toroidal Linked List\033[0m:\t\t\t  \033[34m{} microseconds.\033[0m", d1);
     std::cout << std::format("\nTime to find \033[1;33mALL solutions to the puzzle\033[0m, using \033[1;33mdancing links\033[0m(Search+Copy time):  \033[36m{} microseconds.\033[0m", d2);
     std::cout << std::format("\n\033[1;42mTotal time elapsed:                                                               {} microseconds.\033[0m\n", d1 + d2);  
-    if(allSolutions.size() > 1) std::cout << std::format("\033[1;33mAverage time\033[0m to find each solution to the puzzle:      \t                          \033[36m{} microseconds.\033[0m\n", static_cast<float>(1.0*d2/allSolutions.size()));
+    if(this->numSols > 1) std::cout << std::format("\033[1;33mAverage time\033[0m to find each solution to the puzzle:      \t                          \033[36m{} microseconds.\033[0m\n", static_cast<float>(1.0*d2/this->numSols));
+    std::cout << "\nTotal memory usage: " << this->getMemoryUsage()/1048576 << "MB.";
 }
 
 //Algorithm X implementation.
 void Solver::search() {
     if(head->right == head){
-        this->allSolutions.emplace_back(this->solution);
+        this->allSolutions[this->numSols++] = this->solution;
         return;
     } 
     ColumnNode *c = chooseColumn();
@@ -57,7 +61,7 @@ void Solver::search() {
             this->cover(j->col);
             j = j->right;
         }
-        if(allSolutions.size() < 10) search();
+        if(this->numSols < 10) search();
         solution.pop_back();
         j = r->left;
         while(j != r) {
@@ -147,11 +151,11 @@ bool Solver::userInput() {
 
     if(int root = std::sqrt(this->n); root * root != this->n) return false;
 
-    this->nums = std::vector<int>(this->n * this->n, 0);
+    this->userInputBoard = std::vector<int>(this->n * this->n, 0);
 
     std::cout << "\nPaste unsolved Sudoku:\n";
     for(int i = 0; i < this->n * this->n; i++) {
-        std::cin >> this->nums[i];
+        std::cin >> this->userInputBoard[i];
     }
 
     return true;
@@ -160,9 +164,18 @@ bool Solver::userInput() {
 void Solver::printSolutions(){
     size_t cnt = 0;
     for(auto& _solution : this->allSolutions){
+        if(_solution.empty())    continue;
         this->convertToBoard(_solution);
         std::cout << std::format("\n\033[1mSolution {}:\033[0m\n", ++cnt);
         this->SolvedBoard.printBoard("\033[32m");
         std::cout << "\n";
     }
+}
+
+size_t Solver::getMemoryUsage() {
+    PROCESS_MEMORY_COUNTERS pmc;
+    if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
+        return pmc.WorkingSetSize; //Memory usage in bytes
+    }
+    return 0;
 }

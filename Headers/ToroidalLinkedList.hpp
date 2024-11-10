@@ -14,7 +14,3 @@ public:
     ~ToroidalLinkedList();
     ColumnNode*     construct   (size_t n, ConstraintMatrix& M);
 };
-
-
-
-

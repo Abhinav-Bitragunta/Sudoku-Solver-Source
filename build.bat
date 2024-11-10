@@ -12,4 +12,6 @@ g++ -std=c++23 %optimizers%  -I  Headers  -c      main.cpp                 -o  F
 g++ -std=c++23 %optimizers% A.o B.o C.o D.o E.o F.o -o "Sudoku Solver.exe"
 
 del *.o
-echo Build completed!
+echo Build Successful, opening Sudoku Solver.exe
+
+"Sudoku Solver.exe"

@@ -1,7 +1,7 @@
 #include "Board.hpp"
 
 //Return value at Board[row][col]
-int  Board::at (size_t row, size_t col)             {   return board[row * this->N + col];  }
+int  Board::at (size_t row, size_t col)        const{   return board[row * this->N + col];  }
 
 //Set Board[row][col] to val
 void Board::set(size_t row, size_t col, UINT val)   {   board[row * this->N + col] = val;   }
@@ -10,7 +10,7 @@ void Board::set(size_t row, size_t col, UINT val)   {   board[row * this->N + co
 void Board::set(size_t idx, UINT val)               {   board[idx] = val;   }
 
 //For a n*n Sudoku, returns n.
-size_t Board::rowlength()                           {   return this->N; }
+size_t Board::rowlength()                      const{   return this->N; }
 
 //It exists already, and that value is not equal to val. OR It doesn't exist and placement is illegal.
 bool Board::unsafe(size_t row, size_t col, UINT val){
@@ -48,13 +48,13 @@ Board::Board(const size_t n) {
 }
 
 //Return the grid to which a certain [row][col] belongs to.
-size_t Board::gridNum(size_t row, size_t col) {
+size_t Board::gridNum(size_t row, size_t col) const {
     size_t gridSize = sqrt(this->N);
     return (row/gridSize) * gridSize + (col/gridSize);
 }
 
 //Prints the board in specified ANSI color
-void Board::printBoard(std::string color) {
+void Board::printBoard(const std::string& color) {
     size_t gridSize = std::sqrt(this->N);
     std::string horizontalLine(3 * (gridSize + this->N) + 1, '-');
 

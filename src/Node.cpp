@@ -12,4 +12,3 @@ Node::Node():
 //Size 0 is necessary.
 ColumnNode::ColumnNode():
     size(0){}
-

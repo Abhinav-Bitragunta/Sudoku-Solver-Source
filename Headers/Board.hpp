@@ -23,13 +23,11 @@ public:
     bool                        construct           (const std::vector<int>& newboard)   ;
     bool                        unsafe              (size_t row, size_t col, UINT val)   ;
 
-    int                         at                  (size_t row, size_t col)             ;
-    size_t                      gridNum             (size_t row, size_t col)             ;
+    int                         at                  (size_t row, size_t col)             const;
+    size_t                      gridNum             (size_t row, size_t col)             const;
     void                        set                 (size_t row, size_t col, UINT val)   ;
     void                        set                 (size_t idx, UINT val)               ;
-    size_t                      rowlength           ()                                   ;
+    size_t                      rowlength           ()                                   const;
 
-    void                        printBoard          (std::string color)                  ;
+    void                        printBoard          (const std::string& color)           ;
 };
-
-

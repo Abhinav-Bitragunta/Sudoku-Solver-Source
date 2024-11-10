@@ -9,11 +9,12 @@
 class Solver {
 private:
     ColumnNode          *head;
-    std::vector<Node*>  solution;
+    std::vector<int>    userInputBoard;
     Board               SolvedBoard;
     size_t              n;
-    std::vector<int>    nums;
-    std::vector<std::vector<Node*>> allSolutions;
+    unsigned int        numSols;
+    std::vector<Node*>  solution;
+    std::array<std::vector<Node*>,10> allSolutions;
 
 private:
     void                convertToBoard  (std::vector<Node*>& _solution);
@@ -26,7 +27,8 @@ private:
     
     bool                userInput       ();
 
+    size_t              getMemoryUsage();
+
 public:
     void                launch          ();  
 };
-

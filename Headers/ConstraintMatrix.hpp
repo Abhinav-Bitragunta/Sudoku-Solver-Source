@@ -17,7 +17,3 @@ class ConstraintMatrix {
     size_t              getRows         ();
     size_t              getCols         ();
 };
-
-
-
-
