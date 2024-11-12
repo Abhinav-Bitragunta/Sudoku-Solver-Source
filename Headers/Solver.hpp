@@ -27,7 +27,7 @@ private:
     
     bool                userInput       ();
 
-    size_t              getMemoryUsage();
+    size_t              getMemoryUsage  ();
 
 public:
     void                launch          ();  

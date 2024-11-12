@@ -6,6 +6,7 @@ ColumnNode* ToroidalLinkedList::construct(size_t n, ConstraintMatrix& M) {
     this->head = new ColumnNode;
 
     this->createCols();
+    LOG("Column headers created successfully.");
 
     size_t numrows = M.getRows(), numcols = M.getCols();
 
@@ -38,6 +39,7 @@ ColumnNode* ToroidalLinkedList::construct(size_t n, ConstraintMatrix& M) {
             columnHead      = static_cast<ColumnNode*>(columnHead->right);
         }
     }
+    LOG("Toroidal linked list created successfully.");
     return this->head;
 }
 
@@ -59,6 +61,7 @@ void ToroidalLinkedList::createCols() {
 
 //Free memory after execution.
 ToroidalLinkedList::~ToroidalLinkedList() {
+    LOG("Linked list destructor called");
     ColumnNode *current = static_cast<ColumnNode*>(this->head->right);
     ColumnNode *next;
     int colCount = 0, verticalCount = 0, headCount = 0;

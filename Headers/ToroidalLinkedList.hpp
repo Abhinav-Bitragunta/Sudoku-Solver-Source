@@ -1,4 +1,6 @@
 #pragma once
+#include "Libraries.hpp"
+
 #include "Node.hpp"
 #include "ConstraintMatrix.hpp"
 

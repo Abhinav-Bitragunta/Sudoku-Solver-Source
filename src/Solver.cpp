@@ -49,6 +49,7 @@ void Solver::launch() {
 void Solver::search() {
     if(head->right == head){
         this->allSolutions[this->numSols++] = this->solution;
+        LOG("Solution " + std::to_string(numSols) + " found.");
         return;
     } 
     ColumnNode *c = chooseColumn();
@@ -82,6 +83,7 @@ ColumnNode* Solver::chooseColumn() {
         if(headRight->size < smallest->size) smallest = headRight;
         headRight   = static_cast<ColumnNode*>(headRight->right);
     }
+    LOG("Column Node of index " + std::to_string(smallest->index) + " with " + std::to_string(smallest->size) + " \'option(s)\'chosen.");
     return smallest;
 }
 
@@ -100,6 +102,7 @@ void Solver::cover(ColumnNode *c) {
         }
         i = i->down;
     }
+    LOG("Column of index " + std::to_string(c->index) + " covered");
 }
 
 //Uncover a column.
@@ -117,6 +120,7 @@ void Solver::uncover(ColumnNode *c) {
     }
     c->right->left = c;
     c->left->right = c;
+    LOG("Column of index " + std::to_string(c->index) + " uncovered");
 }
 
 //Decode Node* to index,value
@@ -146,6 +150,8 @@ void Solver::convertToBoard(std::vector<Node*>& _solution) {
 
 //Take input from user, return false on non-square length entries
 bool Solver::userInput() {
+    LOG("\n\033[31m!!! IMPORTANT !!!\033[0m App running in debug mode, which will cause a huge loss of performance, and is intended for the developers only.");
+    LOG("To change this, go to Headers/Libraries.hpp and comment out the line \'#define DEBUG\', and run build.bat again.");
     std::cout << "\nEnter number of rows/columns in the Sudoku: ";
     std::cin >> this->n;
 

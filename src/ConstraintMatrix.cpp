@@ -11,6 +11,7 @@ void ConstraintMatrix::construct(Board& b) {
     this->numRows   = n * nSquared;
 
     this->data      = std::vector<bool>(this->numCols * this->numRows, false);
+    LOG("Memory for constraint matrix allocated successfully.");
 
     //0-80: row-col, 81-161: row-num, 162-242: col-num, 243-323: grid-num
     for(size_t row = 0; row < n; row++) {
@@ -33,6 +34,7 @@ void ConstraintMatrix::construct(Board& b) {
             }
         }
     }
+    LOG("Constraint matrix constructed successfully.");
 }
 
 //Set matrix[row][col] to val

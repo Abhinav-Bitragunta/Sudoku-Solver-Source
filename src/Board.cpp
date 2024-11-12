@@ -23,21 +23,29 @@ bool Board::construct(const std::vector<int>& newboard) {
     this->N     = std::sqrt(newboard.size());
 
     this->RowBitBoard = this->ColumnBitBoard = this->GridBitBoard = std::vector<UINT>(this->N, 0);
+    LOG("Initialization of bitboards successful.");
 
     for(int row = 0; row < this->N; row++) {
         for(int col = 0; col < this->N; col++) {
-            if(this->at(row, col) < 0 || this->at(row, col) > this->N) return false;
+            if(this->at(row, col) < 0 || this->at(row, col) > this->N){
+                LOG("Value out of limits at row " + std::to_string(row) + " " + ", col " + std::to_string(col));
+                return false;
+            }
 
             UINT onBit = 1U << (this->at(row, col));
             if(onBit == 1) continue;
 
-            if((this->RowBitBoard[row] | this->ColumnBitBoard[col] | this->GridBitBoard[gridNum(row, col)]) & onBit) return false;
+            if((this->RowBitBoard[row] | this->ColumnBitBoard[col] | this->GridBitBoard[gridNum(row, col)]) & onBit){
+                LOG("Constraint violated by value at row " + std::to_string(row) + " " + ", col " + std::to_string(col));
+                return false;
+            }
 
             this->RowBitBoard[row]                  |= onBit;
             this->ColumnBitBoard[col]               |= onBit;
             this->GridBitBoard[gridNum(row, col)]   |= onBit;
         }
     }
+    LOG("Board constructed successfully");
     return true;
 }
 
