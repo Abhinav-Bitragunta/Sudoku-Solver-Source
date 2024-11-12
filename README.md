@@ -5,6 +5,7 @@ Uses ***Dancing Links*** to implement ***Knuth's Algorithm X*** to convert Sudok
 ### Build instructions
 
 Run build.bat
+
 To enter debug mode, uncomment the following line in Headers/Libraries.hpp
 
 ```c++
