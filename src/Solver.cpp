@@ -132,14 +132,8 @@ void Solver::convertToBoard(std::vector<Node*>& _solution) {
         do {
             constraintType  = (next->col->index)/(n*n);
             
-            switch(constraintType){
-                case 0:
-                    idx     = next->col->index;
-                    break;
-                default:
-                    val     = (next->col->index)%(this->n) + 1;
-                    break;
-            }
+            if(constraintType == 0)     idx = next->col->index;
+            else                        val = (next->col->index)%(this->n) + 1;
             
             next            = next->right;
         } while(element != next);
