@@ -15,6 +15,7 @@ void Solver::launch() {
         if(board.construct(this->userInputBoard)) break;
         std::cout << std::format("\033[31m Illegal board state. All values must be between 0 and {}, both inclusive. \033[0m\n", this->n);
     }
+    this->solution.reserve(board.rowlength()*board.rowlength()); //to avoid unnecessary reallocation copies.
     
 
     auto t1 = std::chrono::high_resolution_clock::now();
