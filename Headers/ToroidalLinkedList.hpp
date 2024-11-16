@@ -14,5 +14,6 @@ private:
     
 public:
     ~ToroidalLinkedList();
-    ColumnNode*     construct   (size_t n, ConstraintMatrix& M);
+    void            construct   (const size_t n, const ConstraintMatrix& M);
+    ColumnNode*     listHead    ();
 };

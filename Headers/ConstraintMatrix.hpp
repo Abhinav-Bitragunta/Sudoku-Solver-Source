@@ -9,11 +9,11 @@ class ConstraintMatrix {
     size_t              numRows;
     size_t              gridSize;
 
-    void                set             (const size_t& row, const size_t& col, bool val);
+    inline void         set             (const size_t row, const size_t col, const bool val);
     
    public:
-    void                construct       (Board& b);
-    bool                at              (const size_t& row, const size_t& col);
-    size_t              getRows         ();
-    size_t              getCols         ();
+    void                construct       (const Board& b);
+    bool                at              (const size_t row, const size_t col) const;
+    size_t              getRows         () const;
+    size_t              getCols         () const;
 };

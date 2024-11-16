@@ -8,7 +8,7 @@
 
 class Solver {
 private:
-    ColumnNode          *head;
+    ColumnNode          *listhead;
     std::vector<int>    userInputBoard;
     Board               SolvedBoard;
     size_t              n;
@@ -17,18 +17,18 @@ private:
     std::array<std::vector<Node*>,10> allSolutions;
 
 private:
-    void                convertToBoard  (std::vector<Node*>& _solution);
-    void                printSolutions  ();
+    void                convertToBoard  (std::vector<Node*>& _solution) ;
+    void                printSolutions  ()                              ;
 
-    void                search          ();
-    ColumnNode*         chooseColumn    ();
-    void                cover           (ColumnNode* c);
-    void                uncover         (ColumnNode* c);
+    void                search          ()                              ;
+    ColumnNode*         chooseColumn    ()                              ;
+    void                cover           (const ColumnNode* c)           ; //const for compiler optimizations.
+    void                uncover         (ColumnNode* c)                 ;       
     
-    bool                userInput       ();
-
-    size_t              getMemoryUsage  ();
-
-public:
-    void                launch          ();  
+    bool                userInput       ()                              ;
+                    
+    size_t              getMemoryUsage  ()                              ;
+                    
+public:                             
+    void                launch          ()                              ;  
 };

@@ -20,7 +20,8 @@ void Solver::launch() {
     auto t1 = std::chrono::high_resolution_clock::now();
     
     M.construct(board);
-    this->head          = L.construct(this->n, M);
+    L.construct(this->n, M);
+    this->listhead = L.listHead();
 
     auto t2 = std::chrono::high_resolution_clock::now();
     search();
@@ -47,7 +48,7 @@ void Solver::launch() {
 
 //Algorithm X implementation.
 void Solver::search() {
-    if(head->right == head){
+    if(listhead->right == listhead){
         this->allSolutions[this->numSols++] = this->solution;
         LOG("Solution " + std::to_string(numSols) + " found.");
         return;
@@ -77,9 +78,9 @@ void Solver::search() {
 
 //Return pointer to column node with least number of vertical list nodes.
 ColumnNode* Solver::chooseColumn() {
-    ColumnNode *headRight   = static_cast<ColumnNode*>(this->head->right);
+    ColumnNode *headRight   = static_cast<ColumnNode*>(this->listhead->right);
     ColumnNode *smallest    = headRight;
-    while(headRight->right != this->head) {
+    while(headRight->right != this->listhead) {
         if(headRight->size < smallest->size) smallest = headRight;
         headRight   = static_cast<ColumnNode*>(headRight->right);
     }
@@ -88,7 +89,7 @@ ColumnNode* Solver::chooseColumn() {
 }
 
 //Cover a column.
-void Solver::cover(ColumnNode *c) {
+void Solver::cover(const ColumnNode *c) {
     c->right->left = c->left;
     c->left->right = c->right;
     Node *i = c->down;

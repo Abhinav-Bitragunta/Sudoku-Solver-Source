@@ -1,7 +1,7 @@
 #include "ToroidalLinkedList.hpp"
 
 //Construct Toroidal linked list from given constraint matrix.
-ColumnNode* ToroidalLinkedList::construct(size_t n, ConstraintMatrix& M) {
+void ToroidalLinkedList::construct(const size_t n, const ConstraintMatrix& M) {
     this->n     = n;
     this->head = new ColumnNode;
 
@@ -40,7 +40,6 @@ ColumnNode* ToroidalLinkedList::construct(size_t n, ConstraintMatrix& M) {
         }
     }
     LOG("Toroidal linked list created successfully.");
-    return this->head;
 }
 
 void ToroidalLinkedList::createCols() {
@@ -58,6 +57,9 @@ void ToroidalLinkedList::createCols() {
         prev             = temp;
     }
 }
+
+//Return pointer to head of the linked list.
+ColumnNode* ToroidalLinkedList::listHead()      {return this->head;}
 
 //Free memory after execution.
 ToroidalLinkedList::~ToroidalLinkedList() {

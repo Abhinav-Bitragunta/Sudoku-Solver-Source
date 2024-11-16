@@ -15,19 +15,21 @@ private:
     std::vector<UINT>           ColumnBitBoard;
     std::vector<UINT>           GridBitBoard;
     size_t                      N;
+    size_t                      gridSize;
 
 public:
     Board(){}
     Board(const size_t n);
     
-    bool                        construct           (const std::vector<int>& newboard)   ;
-    bool                        unsafe              (size_t row, size_t col, UINT val)   ;
+    bool                        construct           (const std::vector<int>& newboard)                           ;
+    bool                        unsafe              (const size_t row, const size_t col, const UINT val)    const;
 
-    int                         at                  (size_t row, size_t col)             const;
-    size_t                      gridNum             (size_t row, size_t col)             const;
-    void                        set                 (size_t row, size_t col, UINT val)   ;
-    void                        set                 (size_t idx, UINT val)               ;
-    size_t                      rowlength           ()                                   const;
+    int                         at                  (const size_t row, const size_t col)                    const;
+    size_t                      gridNum             (const size_t row, const size_t col)                    const;
+    void                        set                 (const size_t row, const size_t col, const UINT val)         ;
+    void                        set                 (const size_t idx, const UINT val)                           ;
+    size_t                      rowlength           ()                                                      const;
+    size_t                      gridsize            ()                                                      const;
 
-    void                        printBoard          (const std::string& color)           ;
+    void                        printBoard          (const std::string& color)                                   ;
 };

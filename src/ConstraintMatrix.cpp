@@ -1,11 +1,11 @@
 #include "ConstraintMatrix.hpp"
 
 //Construct the matrix using given board.
-void ConstraintMatrix::construct(Board& b) {
+void ConstraintMatrix::construct(const Board& b) {
     size_t n        = b.rowlength();
     size_t nSquared = n*n;
 
-    this->gridSize  = static_cast<size_t>(std::sqrt(n));
+    this->gridSize  = b.gridsize();
 
     this->numCols   = 4 * nSquared;
     this->numRows   = n * nSquared;
@@ -38,13 +38,13 @@ void ConstraintMatrix::construct(Board& b) {
 }
 
 //Set matrix[row][col] to val
-void ConstraintMatrix::set(const size_t& row, const size_t& col, bool val)  {   this->data[row * this->numCols + col] = val;    }
+inline void ConstraintMatrix::set(const size_t row, const size_t col, const bool val)  {   this->data[row * this->numCols + col] = val;    }
 
 //Return value at matrix[row][col]
-bool ConstraintMatrix::at(const size_t& row, const size_t& col)             {   return this->data[(row * this->numCols) + col]; }
+bool ConstraintMatrix::at(const size_t row, const size_t col)                     const{   return this->data[(row * this->numCols) + col]; }
 
 //Return number of rows in matrix
-size_t ConstraintMatrix::getRows()                                          {   return this->numRows;   }
+size_t ConstraintMatrix::getRows()                                                const{   return this->numRows;   }
 
 //Return number of columns in matrix
-size_t ConstraintMatrix::getCols()                                          {   return this->numCols;   }
+size_t ConstraintMatrix::getCols()                                                const{   return this->numCols;   }
