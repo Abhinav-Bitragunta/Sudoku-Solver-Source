@@ -87,4 +87,5 @@ ToroidalLinkedList::~ToroidalLinkedList() {
     headCount++;
     head = nullptr;
     std::cout << std::format("\nHeap memory freed. {} column nodes, {} vertical list nodes, and {} head node for a total of {} nodes destroyed.\n", colCount, verticalCount, headCount, colCount + verticalCount + headCount);
+    std::cout << std::format("Memory taken by the data structures: {:.2f} KB.\n", ((headCount+colCount)*sizeof(ColumnNode) + verticalCount*sizeof(Node) + (n*n*n*n*n*0.5f))/1024.0);
 }

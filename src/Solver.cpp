@@ -44,7 +44,6 @@ void Solver::launch() {
     std::cout << std::format("\nTime to find \033[1;33mALL solutions to the puzzle\033[0m, using \033[1;33mdancing links\033[0m(Search+Copy time):  \033[36m{} microseconds.\033[0m", d2);
     std::cout << std::format("\n\033[1;42mTotal time elapsed:                                                               {} microseconds.\033[0m\n", d1 + d2);  
     if(this->numSols > 1) std::cout << std::format("\033[1;33mAverage time\033[0m to find each solution to the puzzle:      \t                          \033[36m{} microseconds.\033[0m\n", static_cast<float>(1.0*d2/this->numSols));
-    std::cout << "\nTotal memory usage: " << this->getMemoryUsage()/1048576 << "MB.";
 }
 
 //Algorithm X implementation.
@@ -172,12 +171,4 @@ void Solver::printSolutions(){
         this->SolvedBoard.printBoard("\033[32m");
         std::cout << "\n";
     }
-}
-
-size_t Solver::getMemoryUsage() {
-    PROCESS_MEMORY_COUNTERS pmc;
-    if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
-        return pmc.WorkingSetSize; //Memory usage in bytes
-    }
-    return 0;
 }

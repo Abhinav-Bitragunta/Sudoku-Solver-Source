@@ -1,18 +1,19 @@
 #pragma once
 
-#include <iostream>
-#include <format>
-#include <cstddef>
 #include <cmath>
+
+#include <cstddef>
+
+#include <format>
+#include <iostream>
+
 #include <array>
 #include <vector>
 #include <string>
 
 //Timing
 #include <chrono>
-//To check memory usage
-#include <windows.h>
-#include <psapi.h>
+
 
 //DO NOT uncomment this unless you specifically want to enter debug mode.
 // #define DEBUG
