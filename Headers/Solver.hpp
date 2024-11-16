@@ -3,18 +3,17 @@
 
 #include "Board.hpp"
 #include "Node.hpp"
-#include "ConstraintMatrix.hpp"
 #include "ToroidalLinkedList.hpp"
 
 class Solver {
 private:
-    ColumnNode          *listhead;
-    std::vector<int>    userInputBoard;
-    Board               SolvedBoard;
-    size_t              n;
-    unsigned int        numSols;
-    std::vector<Node*>  solution;
-    std::array<std::vector<Node*>,10> allSolutions;
+    ColumnNode                          *listhead;
+    std::vector<int>                    userInputBoard;
+    Board                               SolvedBoard;
+    size_t                              n;
+    unsigned int                        numSols;
+    std::vector<Node*>                  solution;
+    std::array<std::vector<Node*>,10>   allSolutions;
 
 private:
     void                convertToBoard  (std::vector<Node*>& _solution) ;
@@ -26,9 +25,7 @@ private:
     void                uncover         (ColumnNode* c)                 ;       
     
     bool                userInput       ()                              ;
-                    
-    size_t              getMemoryUsage  ()                              ;
-                    
+                                 
 public:                             
     void                launch          ()                              ;  
 };
