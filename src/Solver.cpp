@@ -4,7 +4,7 @@ void Solver::launch() {
     Board                board;
     ToroidalLinkedList   L    ;
     
-    this->allSolutions = std::array<std::vector<Node*>,10>();
+    this->allSolutions = std::array<std::vector<Node*>,solution_limit>();
     this->numSols      = 0;
     
     while(true) {
@@ -61,7 +61,7 @@ void Solver::search() {
             this->cover(j->col);
             j = j->right;
         }
-        if(this->numSols < 10) search();
+        if(this->numSols < solution_limit) search();
         solution.pop_back();
         j = r->left;
         while(j != r) {
@@ -152,6 +152,7 @@ bool Solver::userInput() {
 
     this->userInputBoard = std::vector<int>(this->n * this->n, 0);
 
+    std::cout << std::format("\nThe number of solutions shown will be limited to {}.\n", solution_limit);
     std::cout << "\nPaste unsolved Sudoku:\n";
     for(int i = 0; i < this->n * this->n; i++) {
         std::cin >> this->userInputBoard[i];
