@@ -1,9 +1,10 @@
 import random
 import math
 
-num_grids = 10
-sudoku_size = 9
-num_clues = 20
+start_num = 3
+num_grids = 23
+sudoku_size = 4
+num_clues = 4
 
 class SudokuGenerator:
     def __init__(self, size=9):
@@ -62,7 +63,7 @@ def generate_sudoku(size=9, num_clues=30):
     return puzzle
 
 if __name__ == "__main__":
-    for i in range(1,num_grids+1):
+    for i in range(start_num,start_num+num_grids+1):
         generator = SudokuGenerator(sudoku_size)
         puzzle = generator.generate_puzzle(num_clues)
         print(f"Grid {i}")

@@ -8,9 +8,13 @@ This Sudoku solver uses the fact that NP complete problems can be converted into
 Once converted, it is solved using _Knuth's DLX algorithm_ (Dancing Links implementation of Algorithm X).
 
 The general method of solving by conversion to exact cover usually goes
+
 ``Original Problem -> Convert to exact cover matrix -> Create the linked list required for DLX, using the matrix -> Solve -> Convert back``
+
 However, an optimization we made was to skip the second step entirely.
+
 `` Original Problem -> Create the linked list required for DLX -> Solve -> Convert back``
+
 This optimization proved extremely beneficial to solving times for Sudokus with a smaller number of clues, reducing solving times by  ~30x for a 16x16 Sudoku with no clues (we believe the time savings grow with the size of the Sudoku).
 
 
