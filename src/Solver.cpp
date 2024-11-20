@@ -79,7 +79,9 @@ ColumnNode* Solver::chooseColumn() {
     ColumnNode *headRight   = static_cast<ColumnNode*>(this->listhead->right);
     ColumnNode *smallest    = headRight;
     while(headRight->right != this->listhead) {
-        if(headRight->size < smallest->size) smallest = headRight;
+        if(headRight->size < smallest->size) {
+            smallest = headRight;
+        }
         headRight   = static_cast<ColumnNode*>(headRight->right);
     }
     LOG("Column Node of index " + std::to_string(smallest->index) + " with " + std::to_string(smallest->size) + " \'option(s)\'chosen.");
