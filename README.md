@@ -105,6 +105,16 @@ This generates a **_Sudoku Solver.exe_** file and runs it immediately.
 
 ```
 
+## How to use
+
+Run ***_Sudoku Solver.exe_***
+
+The executable will request the size of the Sudoku, enter 9 for a 9x9 Sudoku, 16 for a 16x16 etc. It works for upto 25x25 Sudokus.
+
+Test cases can be found in the ***_test/_*** directory.
+
+Paste a selected test case when prompted, and the executable will return upto 10 solutions for the given input.
+
   
 
 ## Debug Mode
